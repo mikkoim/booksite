@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<head>
+    <script src="https://cdn.bokeh.org/bokeh/release/bokeh-2.0.1.min.js"
+                crossorigin="anonymous"></script>
+    <script src="https://cdn.bokeh.org/bokeh/release/bokeh-widgets-2.0.1.min.js"
+                crossorigin="anonymous"></script>
+    {{ script | safe }}
+    <title>Bookshelf page</title>
+</head>
+<body>
+    
+    {% block content %}
+    <h2>Goodreads book site</h2>
+
+    <a href="{% url 'refresh' %}">Refresh list</a>
+
+    <h2>Bookshelf</h2>
+    <p>20 latest read books</p>
+    {% if booklist %}
+        <ul>
+        {% for title in booklist %}
+            <li>{{ title }}</li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+    {{div | safe}}
+    {% endblock %}
+</body>
