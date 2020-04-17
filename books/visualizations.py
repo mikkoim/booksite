@@ -22,7 +22,7 @@ def create_bokeh_plot(df):
     
     p = figure(tools=TOOLS,
                title=TITLE,
-               plot_width=1000,
+               sizing_mode='stretch_width',
                x_axis_type='datetime',
                y_range=(0,6))
     

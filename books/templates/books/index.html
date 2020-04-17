@@ -1,28 +1,71 @@
 <!DOCTYPE html>
-<head>
-    <script src="https://cdn.bokeh.org/bokeh/release/bokeh-2.0.1.min.js"
-                crossorigin="anonymous"></script>
-    <script src="https://cdn.bokeh.org/bokeh/release/bokeh-widgets-2.0.1.min.js"
-                crossorigin="anonymous"></script>
-    {{ script | safe }}
-    <title>Bookshelf page</title>
-</head>
-<body>
-    
-    {% block content %}
-    <h2>Goodreads book site</h2>
+<html lang="en">
+    <head>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+        
+        <script src="https://cdn.bokeh.org/bokeh/release/bokeh-2.0.1.min.js"
+                    crossorigin="anonymous"></script>
+        <script src="https://cdn.bokeh.org/bokeh/release/bokeh-widgets-2.0.1.min.js"
+                    crossorigin="anonymous"></script>
+        {{ script | safe }}
 
-    <a href="{% url 'refresh' %}">Refresh list</a>
+        <title>Bookshelf page</title>
+    </head>
+    <body>
+    <div style="padding: 100px">
+        
+        {% block content %}
 
-    <h2>Bookshelf</h2>
-    <p>20 latest read books</p>
-    {% if booklist %}
-        <ul>
-        {% for title in booklist %}
-            <li>{{ title }}</li>
-        {% endfor %}
-        </ul>
-    {% endif %}
-    {{div | safe}}
-    {% endblock %}
-</body>
+        <h3>Goodreads book site</h3>
+        <p>Current user: {{user_id}}</p>
+        <form class="form-inline">
+            <input class="form-control mr-sm-2" type="search" placeholder="User ID" aria-label="Search" name='user_id'>
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Set user</button>
+          </form>
+        {% if reviewlist %}
+            <h3>Latest 20 read books:</h3>
+            <table class="table table-hover">
+                <thead class="thead-light">
+                    <tr>
+                        <th scope="col">Cover</th>
+                        <th scope="col">Title</th>
+                        <th scope="col">Author</th>
+                        <th scope="col">Year</th>
+                        <th scope="col">User rating</th>
+                        <th scope="col">Average rating</th>
+                        <th scope="col">Page count</th>
+                        <th scope="col">Start date</th>
+                        <th scope="col">Read date</th>
+                    </tr>
+                </thead>
+                {% for review in reviewlist %}
+                <tr>
+                    <td>			      
+                        <img src= "{{ review.book.image_url }}" 
+                        class="img-fluid img-thumbnail"
+                        style="width:70%">
+                        {{ review.}}
+                    </td>
+                    <td>{{ review.book.title }}</td>
+                    <td>{{ review.book.author }}</td>
+                    <td>{{ review.book.publication_year }}</td>
+                    <td>{{ review.rating }}</td>
+                    <td>{{ review.book.average_rating }}</td>
+                    <td>{{ review.book.num_pages }}</td>
+                    <td>{{ review.started_at }}</td>
+                    <td>{{ review.read_at }}</td>
+                </tr>
+                {% endfor %}
+
+            </table>
+        {% endif %}
+        <h3>Book rating timeline</h3>
+        <p>Read date timeline and user rating. 
+            Circle size corresponds to book page count, 
+            color to average rating at goodreads.com</p>
+        {{div | safe}}
+        {% endblock %}
+    </div>
+    </body>
+</html>
