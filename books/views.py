@@ -16,6 +16,10 @@ def index(request):
     if 'user_id' in request.GET:
         if request.GET['user_id'] != '':
             user_id = request.GET['user_id']
+
+            request.session['user_id'] = user_id
+            request.session.modified = True
+            
             refresh_shelf(user_id)
 
     if Shelfmodel.objects.filter(user_id=user_id).exists():
