@@ -1,6 +1,5 @@
 #books/auth_keys.py
 #booksite/keys.py
-*.sqlite3
 .vscode
 .directory
 __pycache__/
