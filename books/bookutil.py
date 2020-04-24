@@ -111,7 +111,12 @@ def get_shelves_list(user_id):
     response = requests.get(url)
     xml = response.text
     
-    return xml
+    root = ET.fromstring(xml)
+    shelf_elements = root[1].getchildren()
+    
+    shelf_list = [e[1].text for e in shelf_elements]
+    
+    return shelf_list
 
 def get_shelf(user_id, shelfname):
     
