@@ -6,3 +6,4 @@ requests
 gunicorn
 dj-database-url
 python-telegram-bot
+django-crispy-forms

@@ -1,30 +1,43 @@
 from django.shortcuts import render
+from django.http import HttpResponseRedirect
 from .models import Bookmodel, Reviewmodel, Shelfmodel
+from .forms import UserForm, ShelfForm
 
 from . import bookutil
 from . import visualizations
 
 def index(request):
 
+    # Set initial variables
     user_id = request.session.get('user_id',-1)
+    shelfname = request.session.get('shelfname','read')
+
+    shelf_list = bookutil.get_shelves_list(user_id)
     reviewlist = []
     script = []
     div = []
     
 
-    # If user ID is given
-    if 'user_id' in request.GET:
-        if request.GET['user_id'] != '':
-            user_id = request.GET['user_id']
+    # Build shelf dropdown form
+    if request.method == 'POST':
 
-            request.session['user_id'] = user_id
-            request.session.modified = True
+        form = ShelfForm(shelf_list, request.POST)
+
+        if form.is_valid():
+            shelfname = form.cleaned_data['shelfname']
             
-            refresh_shelf(user_id, 'read')
+            # Save shelfname to session
+            request.session['shelfname'] = shelfname
+            request.session.modified = True
+    else: 
+        form = ShelfForm(shelf_list)
 
-    if Shelfmodel.objects.filter(user_id=user_id).exists():
+    # Show shelf
+    if Shelfmodel.objects.filter(user_id=user_id,
+                                name=shelfname).exists():
 
-        shelf = Shelfmodel.objects.get(user_id=user_id)
+        shelf = Shelfmodel.objects.get(user_id=user_id,
+                                        name=shelfname)
 
         reviewlist = [review for review in shelf.reviewmodel_set.order_by('-read_at')]
         df = bookutil.reviewlist_to_df(reviewlist)
@@ -32,6 +45,7 @@ def index(request):
         script, div = visualizations.create_bokeh_plot(df)
 
     context = {'reviewlist': reviewlist,
+                'form': form,
                 'user_id': user_id,
                 'script': script,
                 'div': div}
@@ -42,13 +56,17 @@ def index(request):
 def refresh_shelf(user_id, shelfname):
     shelf = bookutil.get_shelf(str(user_id), shelfname)
 
+    print('\n\n\n\n\n\nREFRESSHHHHHHHHHH\n\n\n\n\n\n')
+
     # Shelf
-    if not Shelfmodel.objects.filter(user_id=user_id).exists():
+    if not Shelfmodel.objects.filter(user_id=user_id,
+                                    name=shelfname).exists():
         shelf_mod = Shelfmodel.objects.create(name=shelf.name,
                                                 user_id=user_id)
         shelf_mod.save()
     else:
-        shelf_mod = Shelfmodel.objects.get(user_id=user_id)
+        shelf_mod = Shelfmodel.objects.get(user_id=user_id,
+                                            name=shelfname)
 
         # Clear shelf
         for review_mod in shelf_mod.reviewmodel_set.all():
@@ -83,6 +101,23 @@ def refresh_shelf(user_id, shelfname):
         review_mod.shelf.add(shelf_mod)
         review_mod.save()
 
-def refresh(request):
-    context = {}
-    return render(request, 'books/refresh.html', context)
+def set_user(request):
+
+    if request.method == 'POST':
+        form = UserForm(request.POST)
+        if form.is_valid():
+            
+            user_id = form.cleaned_data['user_id']
+            shelflist = bookutil.get_shelves_list(user_id)
+            for shelfname in shelflist:
+                refresh_shelf(user_id, shelfname)  
+
+            # save user id to session
+            request.session['user_id'] = user_id
+            request.session.modified = True
+
+            return HttpResponseRedirect('/')
+    else: 
+        form = UserForm()
+    context = {'form': form}
+    return render(request, 'books/set_user.html', context)
