@@ -3,3 +3,5 @@ django
 numpy
 pandas
 requests
+gunicorn
+dj-database-url
