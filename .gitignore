@@ -1,5 +1,5 @@
-books/auth_keys.py
-booksite/keys.py
+#books/auth_keys.py
+#booksite/keys.py
 .vscode
 .directory
 __pycache__/

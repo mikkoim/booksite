@@ -7,10 +7,11 @@ Created on Thu Apr  2 15:02:57 2020
 import requests
 import xml.etree.ElementTree as ET
 import pandas as pd
+import os
 
 from datetime import datetime
 
-from .auth_keys import KEY
+KEY = os.environ.get('GOODREADS_SECRET_KEY')
 
 DATE_FORMAT = "%a %b %d %H:%M:%S %z %Y"
 BASE = 'https://www.goodreads.com/'
