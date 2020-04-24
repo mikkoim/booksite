@@ -3,8 +3,7 @@ import requests
 import re
 import os
 
-# TOKEN = os.environ.get('TELEGRAM_KEY')
-TOKEN = '1023713519:AAGIMId4ZxG9HL9DhLmVe8louaXQk6LYVwc'
+TOKEN = os.environ.get('TELEGRAM_KEY')
 
 def get_url():
     contents = requests.get('https://random.dog/woof.json').json()    
