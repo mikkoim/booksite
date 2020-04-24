@@ -5,3 +5,4 @@ pandas
 requests
 gunicorn
 dj-database-url
+python-telegram-bot

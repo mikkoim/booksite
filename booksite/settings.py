@@ -24,12 +24,11 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'cg#p$g+j9tax!#a3cup@1$8obt2_+&
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
 
-ALLOWED_HOSTS = ['192.168.1.96',
-                 'ohsiharaspi.ddns.net',
-                 'ohjsiha.herokuapp.com',
-                 '127.0.0.1']
+ALLOWED_HOSTS = ['ohjsiha.herokuapp.com',
+                '127.0.0.1']
 
-
+INTERNAL_IPS = ['127.0.0.1',
+                '192.168.1.96']
 # Application definition
 
 INSTALLED_APPS = [

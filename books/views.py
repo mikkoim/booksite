@@ -20,7 +20,7 @@ def index(request):
             request.session['user_id'] = user_id
             request.session.modified = True
             
-            refresh_shelf(user_id)
+            refresh_shelf(user_id, 'read')
 
     if Shelfmodel.objects.filter(user_id=user_id).exists():
 
@@ -39,8 +39,8 @@ def index(request):
     return render(request, 'books/index.html', context)
 
 
-def refresh_shelf(user_id):
-    shelf = bookutil.get_read_shelf(str(user_id))
+def refresh_shelf(user_id, shelfname):
+    shelf = bookutil.get_shelf(str(user_id), shelfname)
 
     # Shelf
     if not Shelfmodel.objects.filter(user_id=user_id).exists():

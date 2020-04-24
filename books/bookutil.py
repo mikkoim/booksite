@@ -104,14 +104,40 @@ class Shelf:
         s = "{}: {} books".format(self.name, len(self.reviews))
         return s
     
+def get_shelves_list(user_id):
+    url = '{}shelf/list.xml?key={}&user_id={}'.format(BASE,
+                                                      KEY,
+                                                      user_id)
+    response = requests.get(url)
+    xml = response.text
     
-def get_read_shelf(user_id):
-    read_url = '{}review/list?v=2&shelf=read&sort=date_read&key={}&id={}'.format(BASE, KEY, user_id)
+    return xml
 
-    read_response = requests.get(read_url)
-    read_xml = read_response.text
+def get_shelf(user_id, shelfname):
     
-    return Shelf(read_xml)
+    if shelfname=='read':
+        sort='date_read'
+        per_page = '20'
+    else:
+        sort='rating'
+        per_page='200'
+        
+    shelf_url = '{}review/list?v=2' \
+                        '&shelf={}' \
+                        '&key={}' \
+                        '&id={}' \
+                        '&sort={}' \
+                        '&per_page={}'.format(BASE, 
+                                            shelfname, 
+                                            KEY, 
+                                            user_id,
+                                            sort,
+                                            per_page)
+
+    shelf_response = requests.get(shelf_url)
+    shelf_xml = shelf_response.text
+    
+    return Shelf(shelf_xml)
 
 def shelf_to_df(shelf):
     
