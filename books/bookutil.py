@@ -112,9 +112,13 @@ def get_shelves_list(user_id):
     xml = response.text
     
     root = ET.fromstring(xml)
-    shelf_elements = root[1].getchildren()
-    
-    shelf_list = [e[1].text for e in shelf_elements]
+
+    try:
+        shelf_elements = root[1].getchildren()
+        
+        shelf_list = [e[1].text for e in shelf_elements]
+    except:
+        return []
     
     return shelf_list
 

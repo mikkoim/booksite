@@ -9,7 +9,9 @@
         <script src="https://cdn.bokeh.org/bokeh/release/bokeh-widgets-2.0.1.min.js"
                     crossorigin="anonymous"></script>
         {% load crispy_forms_tags %}
-        {{ script | safe }}
+        {% if script %}
+            {{ script | safe }}
+        {% endif %}
 
         <title>Bookshelf page</title>
     </head>
@@ -68,7 +70,10 @@
         <p>Read date timeline and user rating. 
             Circle size corresponds to book page count, 
             color to average rating at goodreads.com</p>
-        {{div | safe}}
+
+        {% if div %}
+            {{div | safe}}
+        {% endif %}
         {% endblock %}
     </div>
     </body>
