@@ -25,7 +25,9 @@ from .keys import SECRET_KEY
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['192.168.1.96',
+                 'ohsiharaspi.ddns.net',
+                 '127.0.0.1']
 
 
 # Application definition
