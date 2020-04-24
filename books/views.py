@@ -25,6 +25,7 @@ def index(request):
 
         if form.is_valid():
             shelfname = form.cleaned_data['shelfname']
+            refresh_shelf(user_id, shelfname)  
             
             # Save shelfname to session
             request.session['shelfname'] = shelfname
@@ -56,7 +57,7 @@ def index(request):
 def refresh_shelf(user_id, shelfname):
     shelf = bookutil.get_shelf(str(user_id), shelfname)
 
-    print('\n\n\n\n\n\nREFRESSHHHHHHHHHH\n\n\n\n\n\n')
+    #print('\n\n\n\n\n\nREFRESSHHHHHHHHHH\n\n\n\n\n\n')
 
     # Shelf
     if not Shelfmodel.objects.filter(user_id=user_id,
@@ -108,9 +109,9 @@ def set_user(request):
         if form.is_valid():
             
             user_id = form.cleaned_data['user_id']
-            shelflist = bookutil.get_shelves_list(user_id)
-            for shelfname in shelflist:
-                refresh_shelf(user_id, shelfname)  
+            #shelflist = bookutil.get_shelves_list(user_id)
+            #for shelfname in shelflist:
+            #    refresh_shelf(user_id, shelfname)  
 
             # save user id to session
             request.session['user_id'] = user_id
