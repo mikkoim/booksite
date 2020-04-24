@@ -40,14 +40,21 @@ def index(request):
         shelf = Shelfmodel.objects.get(user_id=user_id,
                                         name=shelfname)
 
-        reviewlist = [review for review in shelf.reviewmodel_set.order_by('-read_at')]
+        # Create table from shelf
+        if shelfname == 'read':
+            order = '-read_at'
+        else:
+            order = '-book__average_rating'
+        reviewlist = [review for review in shelf.reviewmodel_set.order_by(order)]
         df = bookutil.reviewlist_to_df(reviewlist)
         
+        # Create visualization
         script, div = visualizations.create_bokeh_plot(df)
 
     context = {'reviewlist': reviewlist,
                 'form': form,
                 'user_id': user_id,
+                'shelfname': shelfname,
                 'script': script,
                 'div': div}
 
@@ -108,7 +115,7 @@ def set_user(request):
         form = UserForm(request.POST)
         if form.is_valid():
             
-            user_id = form.cleaned_data['user_id']
+            user_id = str(form.cleaned_data['user_id'])
             #shelflist = bookutil.get_shelves_list(user_id)
             #for shelfname in shelflist:
             #    refresh_shelf(user_id, shelfname)  
