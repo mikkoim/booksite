@@ -11,6 +11,9 @@ import os
 
 from datetime import datetime
 
+from . import googlebooks
+from . import finnaapi
+
 KEY = os.environ.get('GOODREADS_SECRET_KEY')
 
 DATE_FORMAT = "%a %b %d %H:%M:%S %z %Y"
@@ -50,6 +53,16 @@ class Book:
         # author
         auth = c[21].getchildren()[0].getchildren() 
         self.author = auth[1].text
+        
+        # Google API 
+        gbook = googlebooks.make_query(self.title)
+        self.isbn = googlebooks.get_isbn(gbook)
+        self.price = googlebooks.get_price(gbook)
+        
+        # Finna API
+        finna_query = finnaapi.make_query(self.title, '0/TUNI/')
+        self.locations = finnaapi.get_locations(finna_query)
+        
 
     def __repr__(self):
         return self.title
