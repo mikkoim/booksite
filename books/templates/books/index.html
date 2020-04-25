@@ -43,6 +43,8 @@
                         <th scope="col">Page count</th>
                         <th scope="col">Start date</th>
                         <th scope="col">Read date</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Locations</th>
                     </tr>
                 </thead>
                 {% for review in reviewlist %}
@@ -61,6 +63,12 @@
                     <td>{{ review.book.num_pages }}</td>
                     <td>{{ review.started_at }}</td>
                     <td>{{ review.read_at }}</td>
+                    <td>{{ review.book.price }}</td>
+                    <td>
+                        {%  for loc in review.book.location.all %}
+                        <p>{{ loc }}</p>
+                        {% endfor %}
+                    </td>
                 </tr>
                 {% endfor %}
 

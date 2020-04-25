@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
-from .models import Bookmodel, Reviewmodel, Shelfmodel
+from .models import Bookmodel, Reviewmodel, Shelfmodel, Locationmodel
 from .forms import UserForm, ShelfForm
 
 from . import bookutil
@@ -90,6 +90,7 @@ def refresh_shelf(user_id, shelfname):
 
         # Book
         book = review.book
+        
         if not Bookmodel.objects.filter(title=book.title).exists():
 
             book_mod = Bookmodel.objects.create(title=book.title,
@@ -98,7 +99,19 @@ def refresh_shelf(user_id, shelfname):
                                                 publication_year=book.publication_year,
                                                 average_rating=book.average_rating,
                                                 ratings_count=book.ratings_count,
-                                                author=book.author)
+                                                author=book.author,
+                                                isbn=book.isbn,
+                                                price=book.price)
+            if book.locations:
+                for building in book.locations['buildings']:
+                    print(building)
+                    if not Locationmodel.objects.filter(name=building).exists():
+                        loc_mod = Locationmodel.objects.create(name=building)
+                        loc_mod.save()
+                        book_mod.location.add(loc_mod)
+                    else:
+                        loc_mod = Locationmodel.objects.get(name=building)
+                        book_mod.location.add(loc_mod)
 
             book_mod.save()
         else:

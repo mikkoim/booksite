@@ -1,5 +1,12 @@
 from django.db import models
 
+# Location
+class Locationmodel(models.Model):
+    name = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.name
+
 # Shelf
 class Shelfmodel(models.Model):
     name = models.CharField(max_length=200)
@@ -17,6 +24,9 @@ class Bookmodel(models.Model):
     average_rating = models.FloatField(null=True)
     ratings_count = models.IntegerField(null=True)
     author = models.CharField(max_length=200)
+    isbn = models.CharField(max_length=200, null=True)
+    price = models.FloatField(null=True)
+    location = models.ManyToManyField(Locationmodel)
 
     def __str__(self):
         return self.title

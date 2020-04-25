@@ -21,14 +21,14 @@ def make_query(query, building=None):
 
 def get_locations(response):
     try:
-        records = response['records']
+        record = response['records'][0]
         locations = {}
+        title = record['title']
+        buildings = [b['translated'] for b in record['buildings'][1:]]
         
-        for r in records:
-            title = r['title']
-            buildings = [b['translated'] for b in r['buildings'][1:]]
-            
-            locations[title] = buildings
+        locations['title'] = title
+        locations['buildings'] = buildings
+        
         return locations
     except KeyError:
         return None
