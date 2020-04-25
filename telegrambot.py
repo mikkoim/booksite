@@ -8,10 +8,24 @@ import django
 os.environ["DJANGO_SETTINGS_MODULE"] = 'booksite.settings'
 django.setup()
 
-from books.models import Bookmodel, Reviewmodel, Shelfmodel
+from books.models import Bookmodel, Reviewmodel, Shelfmodel, Locationmodel
 from books import bookutil
 
 TOKEN = os.environ.get('TELEGRAM_KEY')
+
+def bookquery_to_string(book_q):
+    # Get titles and shorten them
+    titlelist = [b.title for b in book_q]
+    maxlength = 30
+    titlelist = [t if len(t) < maxlength else t[0:maxlength]+'...' for t in titlelist]
+    
+    # Ratings
+    ratinglist = [b.average_rating for b in book_q]
+
+    # Combine and send
+    stringlist = ["{} - \t{}".format(r[0],r[1]) for r in zip(titlelist, ratinglist)]
+    
+    return '\n'.join(stringlist)
 
 def start(update, context):
     context.bot.send_message(update.message.chat_id,
@@ -52,30 +66,31 @@ def shelf(update, context):
             'Found shelves are:')
         getshelves(update, context)
         return 
-    booklist = [r.book for r in shelf.reviewmodel_set.order_by('-book__average_rating')]
+    book_q = [r.book for r in shelf.reviewmodel_set.order_by('-book__average_rating')]
 
-    # Get titles and shorten them
-    titlelist = [b.title for b in booklist]
-    maxlength = 30
-    titlelist = [t if len(t) < maxlength else t[0:maxlength]+'...' for t in titlelist]
-    
-    # Ratings
-    ratinglist = [b.average_rating for b in booklist]
-
-    # Combine and send
-    stringlist = ["{} - \t{}".format(r[0],r[1]) for r in zip(titlelist, ratinglist)]
-    
-    s = '\n'.join(stringlist)
+    s = bookquery_to_string(book_q)
     update.message.reply_text(s)
 
 def shelves(update, context):
     user_id = context.user_data['user_id']
     shelf_q = Shelfmodel.objects.filter(user_id=user_id)
     shelf_list = [shelf.name for shelf in shelf_q]
-
     s = '\n'.join(shelf_list)
     update.message.reply_text(s)
-    
+
+def places(update, context):
+    location_q = Locationmodel.objects.all()
+    locations = [loc.name for loc in location_q]
+    s = '\n'.join(locations)
+    update.message.reply_text(s)
+
+def place(update, context):
+    placename = update.message.text.split(' ')[1]
+    location = Locationmodel.objects.get(name=placename)
+    book_q = location.bookmodel_set.order_by('-average_rating')
+    s = bookquery_to_string(book_q)
+    update.message.reply_text(s)
+
 def main():
     updater = Updater(TOKEN, use_context=True)
     
@@ -86,6 +101,8 @@ def main():
     dp.add_handler(CommandHandler('getuser',getuser))
     dp.add_handler(CommandHandler('shelf',shelf))
     dp.add_handler(CommandHandler('shelves',shelves))
+    dp.add_handler(CommandHandler('places',places))
+    dp.add_handler(CommandHandler('place',place))
     
     updater.start_polling()
     updater.idle()
