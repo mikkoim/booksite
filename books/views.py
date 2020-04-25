@@ -25,7 +25,11 @@ def index(request):
 
         if form.is_valid():
             shelfname = form.cleaned_data['shelfname']
-            refresh_shelf(user_id, shelfname)  
+
+            # Refresh shelf
+            if form.cleaned_data['refresh']=='True':
+                print('\n\n\n REFRESSS\n\n\n')
+                refresh_shelf(user_id, shelfname)  
             
             # Save shelfname to session
             request.session['shelfname'] = shelfname

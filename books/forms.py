@@ -20,3 +20,11 @@ class ShelfForm(forms.Form):
         super(ShelfForm, self).__init__(*args, **kwargs)
         self.fields['shelfname'] = forms.ChoiceField(label='Shelf name',
                                     choices=[(s,s) for s in shelf_list])
+
+        CHOICES=[(True,'True'),
+                (False,'False')]
+
+        self.initial['refresh'] = False
+        self.fields['refresh'] = forms.ChoiceField(label='Refresh table?',
+                        choices=CHOICES,
+                        widget=forms.RadioSelect)
