@@ -6,8 +6,6 @@ from io import StringIO
 import json
 
 KEY = os.environ.get('GOOGLE_BOOKS_KEY')
-KEY = 'AIzaSyAU1rBlEqXTZImJd5MKzjB2M813zNnfQgU'
-
 BASE = 'https://www.googleapis.com/books/v1/'
 
 
