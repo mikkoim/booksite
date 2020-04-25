@@ -1,1 +1,1 @@
-web: gunicorn booksite.wsgi --log-file - & telegrambot.py & wait -n
+web: gunicorn booksite.wsgi --log-file - & python telegrambot.py & wait -n
