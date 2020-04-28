@@ -6,6 +6,9 @@ from .forms import UserForm, ShelfForm
 from . import bookutil
 from . import visualizations
 
+from rest_framework import generics
+from .serializers import BookSerializer
+
 def index(request):
 
     # Set initial variables
@@ -146,3 +149,10 @@ def set_user(request):
         form = UserForm()
     context = {'form': form}
     return render(request, 'books/set_user.html', context)
+
+
+##### REST API ##########
+
+class ListBooksView(generics.ListAPIView):
+    queryset = Bookmodel.objects.all()
+    serializer_class = BookSerializer

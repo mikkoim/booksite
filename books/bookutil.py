@@ -123,6 +123,8 @@ def get_shelves_list(user_id):
                                                       user_id)
     response = requests.get(url)
     xml = response.text
+    if xml[:15] == 'Invalid API key':
+        raise Exception("Invalid API key")
     
     root = ET.fromstring(xml)
 
