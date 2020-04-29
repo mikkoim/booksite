@@ -154,5 +154,11 @@ def set_user(request):
 ##### REST API ##########
 
 class ListBooksView(generics.ListAPIView):
-    queryset = Bookmodel.objects.all()
     serializer_class = BookSerializer
+    def get_queryset(self):
+
+        queryset = Bookmodel.objects.all()
+        isbn = self.request.query_params.get('isbn', None)
+        if isbn is not None:
+            queryset = queryset.filter(isbn=isbn)
+        return queryset
