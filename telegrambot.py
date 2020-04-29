@@ -36,7 +36,9 @@ def start(update, context):
     '/setuser <User ID>: Sets the user ID\n' \
     '/getuser: Returns the current user ID\n' \
     '/shelves: Shelves searched on the website\n'\
-    '/shelf <shelfname>: Returns top rated books on the shelf')
+    '/shelf <shelfname>: Returns top rated books on the shelf\n'\
+    '/places: Possible libraries containing books\n'\
+    '/place <placename>: Returns top rated books in the library')
 
 def setuser(update, context):
     value = update.message.text.split(' ')[1]
